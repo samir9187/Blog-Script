@@ -23,7 +23,7 @@ To set up Blog-It locally, follow these comprehensive steps:
 
    ```bash
    git clone https://github.com/samir9187/NewBlog
-   cd Blog-It `
+   cd Blog-Script `
 
    ```
 
@@ -101,7 +101,7 @@ This setup process covers cloning the repository, installing dependencies, and c
 
 # User Authentication
 
-Blog-It uses bcrypt for password hashing, JWT for secure user authentication, and cookies for a seamless user experience. To contribute, familiarize yourself with these technologies and the authentication flow in the application.
+Blog-Script uses bcrypt for password hashing, JWT for secure user authentication, and cookies for a seamless user experience. To contribute, familiarize yourself with these technologies and the authentication flow in the application.
 
 # Contributing
 
