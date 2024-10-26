@@ -1,40 +1,43 @@
-import { getDataUri } from "../middleware/dataUri.js";
 import Post from "../models/post.js";
-import cloudinary from 'cloudinary'
-import jwt from 'jsonwebtoken'
-const NewPost = async(req,res) =>{
-    try{
-    const header = req.headers;
-    const token = header?.authorization.split(' ')[1];
-    let userInfo=null;
-    try{
-        jwt.verify(token,process.env.SECRET,(err,info)=>{
-            if(err) console.log(err);
-            userInfo=info;
-        })
-    }
-    catch(err){
-        console.log(err)
-    }
-    const fileUri = getDataUri(req.file)
-    const cloudUri = await cloudinary.v2.uploader.upload(fileUri.content);
-    const {Title , Summary , Content} = req.body;
-    const Cover = cloudUri.secure_url;
-    const {id} = userInfo;
-    const newPost = new Post({
-        Title,
-        Summary,
-        Cover,
-        Content,
-        Author:id
-    })
-    const response = await newPost.save();
-    if(response) res.status(200).json('ok');
-    else res.json('error!')
-    }
-    catch(err){
-        res.json('error')
-    }
-}
+import cloudinary from "cloudinary";
+import jwt from "jsonwebtoken";
 
-export default NewPost
+const NewPost = async (req, res) => {
+  try {
+    const token = req.headers?.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json("Authorization required.");
+
+    const userInfo = jwt.verify(token, process.env.SECRET);
+    if (!userInfo) return res.status(401).json("Invalid token.");
+
+    const { Title, Summary, Content } = req.body;
+    const file = req.file;
+
+    if (!Title || !Summary || !Content) {
+      return res.status(400).json("All required fields must be filled.");
+    }
+
+    let Cover;
+    if (file) {
+      const fileUri = getDataUri(file);
+      const cloudUri = await cloudinary.v2.uploader.upload(fileUri.content);
+      Cover = cloudUri.secure_url;
+    }
+
+    const newPost = new Post({
+      Title,
+      Summary,
+      Cover: Cover || null,
+      Content,
+      Author: userInfo.id,
+    });
+
+    const response = await newPost.save();
+    res.status(200).json("ok");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Server error. Please try again.");
+  }
+};
+
+export default NewPost;

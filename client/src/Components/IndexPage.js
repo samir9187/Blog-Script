@@ -35,6 +35,9 @@ export default function IndexPage() {
         setLoading(false);
       });
   }, []);
+  if (loading) {
+    return <Loader />;
+  }
 
   function handleSearch(search) {
     const searchResults = posts.filter((post) =>
