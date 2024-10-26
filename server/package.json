@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node App.js"
   },
-  "author": "babubisleri",
+  "author": "samir",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
