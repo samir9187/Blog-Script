@@ -17,7 +17,7 @@ const NewPost = async (req, res) => {
       return res.status(400).json("All required fields must be filled.");
     }
 
-    let Cover;
+    let Cover = null;
     if (file) {
       const fileUri = getDataUri(file);
       const cloudUri = await cloudinary.v2.uploader.upload(fileUri.content);
@@ -27,13 +27,13 @@ const NewPost = async (req, res) => {
     const newPost = new Post({
       Title,
       Summary,
-      Cover: Cover || null,
+      Cover,
       Content,
       Author: userInfo.id,
     });
 
     const response = await newPost.save();
-    res.status(200).json("ok");
+    return res.status(200).json("ok");
   } catch (err) {
     console.error(err);
     res.status(500).json("Server error. Please try again.");
