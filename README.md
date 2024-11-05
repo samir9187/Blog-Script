@@ -1,9 +1,9 @@
 # Blog-Script
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/samir9187/NewBlog.svg)](https://github.com/samir9187/Blog-Script/issues)
-[![GitHub stars](https://img.shields.io/github/stars/samir9187/NewBlog.svg)](https://github.com/samir9187/Blog-Script/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/samir9187/NewBlog.svg)](https://github.com/samir9187/Blog-Script/network)
+[![GitHub issues](https://img.shields.io/github/issues/samir9187/Blog-Script.svg)](https://github.com/samir9187/Blog-Script/issues)
+[![GitHub stars](https://img.shields.io/github/stars/samir9187/Blog-Script.svg)](https://github.com/samir9187/Blog-Script/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/samir9187/Blog-Script.svg)](https://github.com/samir9187/Blog-Script/network)
 
 Blog Script is a MERN (MongoDB, Express.js, React, Node.js) stack application that empowers users to create, view, and search for blog posts. It incorporates robust user authentication using bcrypt, JWT, and cookies, allowing users to log in, register, and engage with the community through comments. Only the author of a post has the authority to update or delete it.
 
