@@ -1,6 +1,7 @@
 import Post from "../models/post.js";
 import cloudinary from "cloudinary";
 import jwt from "jsonwebtoken";
+import { getDataUri } from "../middleware/dataUri.js";
 
 const NewPost = async (req, res) => {
   try {
