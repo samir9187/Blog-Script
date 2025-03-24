@@ -1,26 +1,90 @@
 import Post from "../models/post.js";
 import User from "../models/user.js";
 
+// export const getPosts = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 5;
+//     const search = req.query.search || "";
+    
+//     console.log("Search query:", search); // Debug log
+    
+//     // Create search query if search parameter exists
+//     let query = {};
+//     if (search && search.trim() !== "") {
+//       query = {
+//         $or: [
+//           { Title: { $regex: search, $options: 'i' } },
+//           { Summary: { $regex: search, $options: 'i' } },
+//           { Content: { $regex: search, $options: 'i' } }
+//         ]
+//       };
+//     }
+    
+//     console.log("MongoDB query:", JSON.stringify(query)); // Debug log
+    
+//     // Find posts with search filter
+//     const posts = await Post.find(query)
+//       .populate("Author", "username")
+//       .sort({ updatedAt: -1 })
+//       .skip((page - 1) * limit)
+//       .limit(limit);
+
+//     // Count total matching posts for pagination
+//     const totalPosts = await Post.countDocuments(query);
+    
+//     console.log(`Found ${posts.length} posts out of ${totalPosts} total`); // Debug log
+    
+//     res.json({
+//       posts,
+//       totalPages: Math.ceil(totalPosts / limit),
+//       currentPage: page,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//     res.status(500).json({ error: "Failed to fetch posts" });
+//   }
+// };
+
 export const getPosts = async (req, res) => {
   try {
-    const { page = 1, limit = 5 } = req.query; 
-    const posts = await Post.find()
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const search = req.query.search || "";
+    
+    console.log("Search query:", search); // Debug log
+    
+    let query = {};
+    if (search && search.trim() !== "") {
+      query = {
+        Title: { $regex: search, $options: 'i' }
+      };
+    }
+    
+    console.log("MongoDB query:", JSON.stringify(query)); // Debug log
+    
+    // Find posts with search filter
+    const posts = await Post.find(query)
       .populate("Author", "username")
       .sort({ updatedAt: -1 })
       .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+      .limit(limit);
 
-    const totalPosts = await Post.countDocuments();
+    // Count total matching posts for pagination
+    const totalPosts = await Post.countDocuments(query);
+    
+    // console.log(`Found ${posts.length} posts out of ${totalPosts} total`); 
+    
     res.json({
       posts,
       totalPages: Math.ceil(totalPosts / limit),
-      currentPage: parseInt(page),
+      currentPage: page,
     });
   } catch (error) {
+    console.error("Error fetching posts:", error);
     res.status(500).json({ error: "Failed to fetch posts" });
   }
 };
-
 
 export const getPost = async (req, res) => {
   const id = req.params.id;
