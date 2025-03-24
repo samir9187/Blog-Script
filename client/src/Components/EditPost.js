@@ -1,66 +1,77 @@
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import './CreatePost.css'
+import './CreatePost.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-export default function EditPost(){
-    const {id} = useParams();
-    const [title,setTitle] = useState('');
-    const [summary,setSummary] = useState('');
-    const [content,setContent] = useState('');
-    const [file,setFile] = useState(null);
-    const Navigate = useNavigate();
-    useEffect(()=>{
-        fetch(`${process.env.REACT_APP_SERVER_URL}/getPosts/${id}`,{
-            method:'GET'
-        })
-        .then(response=>{response.json().then(PostInfo=>{
-            setTitle(PostInfo.Title);
-            setSummary(PostInfo.Summary);
-            setContent(PostInfo.Content);
+export default function EditPost() {
+    const { id } = useParams();
+    const [title, setTitle] = useState('');
+    const [summary, setSummary] = useState('');
+    const [content, setContent] = useState('');
+    const [file, setFile] = useState(null);
+    const navigate = useNavigate();
 
-        })})
-    },[id])
-    async function updatePost(e){
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/getPosts/${id}`)
+            .then(response => response.json())
+            .then(PostInfo => {
+                setTitle(PostInfo.Title);
+                setSummary(PostInfo.Summary);
+                setContent(PostInfo.Content);
+            })
+            .catch(error => console.error("Error fetching post:", error));
+    }, [id]);
+
+    async function updatePost(e) {
         e.preventDefault();
-        alert('If you dont attach any image , the post will still have the previous image')
+        alert('If you don’t attach any image, the post will still have the previous image');
+
         const formData = new FormData();
-        formData.set('Title',title);
-        formData.set('Summary',summary);
-        formData.set('Content',content);
-        formData.set('id',id);
-        if(file){
-            formData.set('File',file);
-        }
-        else{
-            formData.set('File','');
-        }
-        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/updatePost`,{
-            method:'PUT',
-            body:formData,
-             
-        });
-        if(await response.json()==='ok'){
-            Navigate(`/${id}`)
-        }
-        else{
-            alert('Error! fill all fields')
+        formData.append('Title', title);
+        formData.append('Summary', summary);
+        formData.append('Content', content);
+        formData.append('id', id);
+      
+    if (file) {
+        formData.append("Cover", file); 
+    }
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/updatePost`, {
+                method: 'PUT',
+                body: formData,
+            });
+
+            const textResponse = await response.text();
+            console.log("Server response:", textResponse);
+
+            const jsonResponse = JSON.parse(textResponse);
+
+            if (jsonResponse === 'ok') {
+                navigate(`/${id}`);
+            } else {
+                alert('Error! Fill all fields');
+            }
+        } catch (error) {
+            console.error("Error updating post:", error);
+            alert('Failed to update the post.');
         }
     }
-    return(
+
+    return (
         <div className='createpost'>
             <div>
                 <h1>Edit Post</h1>
             </div>
-            <form>
-                <input type='text' required='true' onChange={(e)=>{setTitle(e.target.value)}} placeholder='Title' value={title} />
-                <input type='text' onChange={(e)=>{setSummary(e.target.value)}} placeholder='Summary' value={summary} />
-                <input type='file' onChange={(e)=>{setFile(e.target.files[0])}}/>
+            <form onSubmit={updatePost}>
+                <input type='text' required onChange={(e) => setTitle(e.target.value)} placeholder='Title' value={title} />
+                <input type='text' onChange={(e) => setSummary(e.target.value)} placeholder='Summary' value={summary} />
+                <input type='file' onChange={(e) => setFile(e.target.files[0])} />
                 <h3>Content</h3>
-                <ReactQuill onChange={(Content)=>{setContent(Content)}} className='QuillContent' theme="snow" value={content} />
-                <button onClick={updatePost} className='Btn'>Update Post</button>
+                <ReactQuill onChange={(content) => setContent(content)} className='QuillContent' theme="snow" value={content} />
+                <button type="submit" className='Btn'>Update Post</button>
             </form>
         </div>
-    )
+    );
 }
