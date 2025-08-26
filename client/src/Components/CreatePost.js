@@ -52,7 +52,7 @@ const CreatePost = () => {
   return (
     <div className="createpost">
       <div>
-        <h1>Create a Post</h1>
+        <h1>Create Post</h1>
       </div>
       <form onSubmit={handleSubmit}>
         <input

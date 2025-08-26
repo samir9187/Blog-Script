@@ -52,7 +52,7 @@ export const getPosts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 5;
     const search = req.query.search || "";
     
-    console.log("Search query:", search); // Debug log
+    console.log("Search query:", search); 
     
     let query = {};
     if (search && search.trim() !== "") {
@@ -61,7 +61,7 @@ export const getPosts = async (req, res) => {
       };
     }
     
-    console.log("MongoDB query:", JSON.stringify(query)); // Debug log
+    console.log("MongoDB query:", JSON.stringify(query)); 
     
     // Find posts with search filter
     const posts = await Post.find(query)

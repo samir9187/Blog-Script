@@ -33,7 +33,7 @@ const NewPost = async (req, res) => {
       Author: userInfo.id,
     });
 
-    const response = await newPost.save();
+    const res = await newPost.save();
     return res.status(200).json("ok");
   } catch (err) {
     console.error(err);
